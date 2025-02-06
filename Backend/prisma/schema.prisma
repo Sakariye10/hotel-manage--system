@@ -1,0 +1,206 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Roles {
+  Super_Admin
+  Admin
+  User
+}
+
+model Users {
+  U_Id       Int        @id @default(autoincrement())
+  Name       String
+  Phone      String
+  Email      String
+  Password   String
+  Role       Roles      @default(User)
+  Is_Deleted Boolean    @default(false)
+  Created_At DateTime   @default(now())
+  Updated_At DateTime   @updatedAt
+  Booking    Booking[]
+  Payment    Payment[]
+  Debts      Debts[]
+  Employee   Employee[]
+  Sallary    Sallary[]
+  Expense    Expense[]
+  Floor      Floor[]
+}
+
+model Hotel {
+  H_Id       Int      @id @default(autoincrement())
+  H_No       String
+  Address    String
+  No_Floors  String
+  Is_Deleted Boolean  @default(false)
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
+  Floor      Floor[]
+}
+
+model Floor {
+  F_Id       Int      @id @default(autoincrement())
+  F_No       String
+  H_Id       Int
+  No_Rooms   Int
+  Author_Id  Int
+  Is_Deleted Boolean  @default(false)
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
+
+  // Relation Ships Part 
+  Hotel Hotel   @relation(fields: [H_Id], references: [H_Id])
+  User  Users   @relation(fields: [Author_Id], references: [U_Id])
+  Rooms Rooms[]
+}
+
+model Room_Type {
+  Rt_Id      Int      @id @default(autoincrement())
+  Rt_Name    String
+  Rt_Price   String
+  No_Beds    String
+  Is_Deleted Boolean  @default(false)
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
+  Rooms      Rooms[]
+}
+
+model Rooms {
+  R_Id       Int       @id @default(autoincrement())
+  R_No       String
+  Rt_Id      Int
+  F_Id       Int
+  Is_Deleted Boolean   @default(false)
+  Created_At DateTime  @default(now())
+  Updated_At DateTime  @updatedAt
+  // Raltion's Ships Part 
+  R_Type     Room_Type @relation(fields: [Rt_Id], references: [Rt_Id])
+  Floor      Floor     @relation(fields: [F_Id], references: [F_Id])
+  Booking    Booking[]
+}
+
+model Booking {
+  Bk_Id      Int      @id @default(autoincrement())
+  Cu_Name    String
+  Cu_Phone   String
+  R_Id       Int
+  Price      Int
+  B_Days     Int
+  Total      Int
+  Paid       Int
+  Balance    Int
+  Us_Id      Int
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
+
+  // Relation Part
+  Room Rooms @relation(fields: [R_Id], references: [R_Id])
+  User Users @relation(fields: [Us_Id], references: [U_Id])
+}
+
+model Customers {
+  Cu_Id      Int       @id @default(autoincrement())
+  Cu_Name    String
+  Cu_Phone   String
+  Cu_Address String?
+  Cu_Balance Int       @default(0)
+  Author_Id  Int
+  Created_At DateTime  @default(now())
+  Updated_At DateTime  @updatedAt
+  Payment    Payment[]
+}
+
+model Payment {
+  P_Id       Int      @id @default(autoincrement())
+  Cu_Id      Int
+  Balance    Int
+  Paid       Int
+  Total      Int
+  Pay_Method Int
+  Author_Id  Int
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
+
+  // Relation Part
+  Customer Customers @relation(fields: [Cu_Id], references: [Cu_Id])
+  Users    Users     @relation(fields: [Author_Id], references: [U_Id])
+}
+
+model Debts {
+  D_Id       Int      @id @default(autoincrement())
+  Cu_Name    String
+  Cu_Phone   String
+  Balance    String
+  Author_Id  Int
+  Is_Deleted Boolean  @default(false)
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
+
+  // Relation's Part
+  Users Users @relation(fields: [Author_Id], references: [U_Id])
+}
+
+enum Jobs {
+  Manager
+  Cashier
+  Cleaning
+  Guard
+  Waiter
+  Cook
+}
+
+model Employee {
+  Em_Id      Int      @id @default(autoincrement())
+  Em_Name    String
+  Em_Phone   String
+  Em_Address String
+  Em_Sallary String
+  Em_Job     Jobs     @default(Waiter)
+  Author_Id  Int
+  Is_Deleted Boolean  @default(false)
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
+
+  // Realtions Part 
+  Users   Users     @relation(fields: [Author_Id], references: [U_Id])
+  Sallary Sallary[]
+}
+
+model Sallary {
+  Sa_Id      Int      @id @default(autoincrement())
+  Em_Id      Int
+  Paid       Int
+  Author_Id  Int
+  Is_Deleted Boolean  @default(false)
+  Created_At DateTime @default(now())
+  Updated_At DateTime @updatedAt
+
+  // Realtion's Part
+  Users    Users    @relation(fields: [Author_Id], references: [U_Id])
+  Employee Employee @relation(fields: [Em_Id], references: [Em_Id])
+}
+
+model Expense {
+  Ex_Id       Int      @id @default(autoincrement())
+  Purpose     String
+  Amount      Int
+  Man_Checked Boolean  @default(false)
+  Author_Id   Int
+  Is_Deleted  Boolean  @default(false)
+  Created_At  DateTime @default(now())
+  Updated_At  DateTime @updatedAt
+
+  //  Relation's Part
+  Users Users @relation(fields: [Author_Id], references: [U_Id])
+}
