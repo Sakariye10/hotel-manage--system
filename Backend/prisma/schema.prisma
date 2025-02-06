@@ -33,10 +33,9 @@ model Users {
   Payment    Payment[]
   Debts      Debts[]
   Employee   Employee[]
-  Sallary    Sallary[]
   Expense    Expense[]
   Floor      Floor[]
-}
+} 
 
 model Hotel {
   H_Id       Int      @id @default(autoincrement())
@@ -174,22 +173,8 @@ model Employee {
 
   // Realtions Part 
   Users   Users     @relation(fields: [Author_Id], references: [U_Id])
-  Sallary Sallary[]
 }
 
-model Sallary {
-  Sa_Id      Int      @id @default(autoincrement())
-  Em_Id      Int
-  Paid       Int
-  Author_Id  Int
-  Is_Deleted Boolean  @default(false)
-  Created_At DateTime @default(now())
-  Updated_At DateTime @updatedAt
-
-  // Realtion's Part
-  Users    Users    @relation(fields: [Author_Id], references: [U_Id])
-  Employee Employee @relation(fields: [Em_Id], references: [Em_Id])
-}
 
 model Expense {
   Ex_Id       Int      @id @default(autoincrement())
