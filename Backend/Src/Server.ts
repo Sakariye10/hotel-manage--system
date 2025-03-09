@@ -3,6 +3,7 @@ import UserRoute from './Routes/UserRoute'
 import HotelRouter from './Routes/hotelRoute'
 import FloorsRouter from './Routes/FloorsRoute'
 import RoomTypeRouter from './Routes/RoomtypRoute'
+import  BookRouter from './Routes/BookingRoute'
 const Port = 9001;
 const App = express();
 
@@ -12,6 +13,8 @@ App.use("/api/users" , UserRoute)
 App.use("/api/hotels" , HotelRouter)
 App.use("/api/floor" , FloorsRouter)
 App.use("/api/roomtype" , RoomTypeRouter)
+App.use("/api/Booking", BookRouter)
+
 
 
 App.listen(Port , () => {
