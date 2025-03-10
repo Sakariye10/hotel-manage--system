@@ -34,7 +34,7 @@ import { customUserRequest, generateToken } from "../Helpers/Jwt";
 
 //Exmple get all
 
-export const getfloors = async (req: customUserRequest, res: Response) : Promise<any> => {
+export const getfloors = async (req: Request, res: Response) : Promise<any> => {
     try {
         // Fetch all floors that are not marked as deleted
         const floors = await prisma.floor.findMany({
@@ -71,7 +71,7 @@ export const getfloors = async (req: customUserRequest, res: Response) : Promise
 
 
 // create floors
-export const createFloors = async (req: customUserRequest, res: Response) : Promise<any> => {
+export const createFloors = async (req: Request, res: Response) : Promise<any> => {
     try {
         const { No_Rooms, H_Id, F_No,  } = req.body;
 
@@ -103,7 +103,7 @@ export const createFloors = async (req: customUserRequest, res: Response) : Prom
 }
 
 // delete or restore data
-export const removeFloor = async (req: customUserRequest, res: Response): Promise<any> => {
+export const removeFloor = async (req: Request, res: Response): Promise<any> => {
     try {
         // 1️⃣ Extract F_Id from request parameters
         const { F_Id } = req.params;
