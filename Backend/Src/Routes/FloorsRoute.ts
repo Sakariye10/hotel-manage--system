@@ -1,10 +1,7 @@
-import { Router } from "express";
-import { getfloors, createFloors, removeFloor} from "../Controllers/FloorController";
-
-const router = Router();
-
-router.get('/getfloor', getfloors);
-router.post('/createfloor', createFloors);
-router.put('/remove/:F_Id', removeFloor); // ✅ Fixed "reomve" typo
+import {Router} from 'express'
+import { decodeToken } from '../Helpers/Jwt';
+import { getAllFloors } from '../Controllers/FloorController';
+const router = Router()
+ router.get('/all' , decodeToken , getAllFloors)
 
 export default router;
